@@ -3,9 +3,7 @@
 This project is part of a SQL capstone focused on addressing key operational inefficiencies and employee engagement strategies within a multi-departmental business. It utilizes SQL queries and database objects to extract insights related to employee performance, product sales, inventory, and more.
 
 ## Problem Statement
-Problem Statement:
-Enhancing Operational Efficiency and Growth Strategies in a Multi-Departmental
-Business
+Enhancing Operational Efficiency and Growth Strategies in a Multi-Departmental Business
 Context:
 ● Business operations involve a complex interaction between departments,
 products, suppliers, and employees, where each element contributes to
@@ -15,19 +13,25 @@ navigating supply chain dependencies require constant data analysis for
 informed decision-making. Effective alignment between leadership,
 employees, and market trends is also crucial for future planning and
 sustainable growth. 
+
+
 Problem:
-● The company is experiencing several operational inefficiencies:
+The company is experiencing several operational inefficiencies:
 ● Employee Performance & Retention Challenges: Inconsistent employee
-performance and high turnover rates negatively impact productivity. The
-company needs to evaluate whether training programs, salary, and tenure
-influence employee retention and performance.
+Performance and high turnover rates negatively impact productivity.
+The company needs to evaluate whether training programs, salary, and tenure
+Influence employee retention and performance.
+
+
 ● Product Sales & Customer Satisfaction Issues: Some products have low
 customer feedback scores despite high sales, indicating potential quality or
 support issues. Additionally, low sales for certain products may suggest
 gaps in marketing strategies or misalignment with market demands.
+
 ● Supply Chain & Inventory Management Issues: Supply chain risks are
 posed by low inventory levels approaching reorder points, potentially
 leading to missed sales opportunities if not addressed promptly.
+
 ● Technology Usage & Future Planning Concerns: The company is
 underutilizing technology in several departments, leading to inefficiencies.
 Weak market research and unclear company direction could affect
@@ -47,22 +51,27 @@ This project aims to analyze operational data to identify patterns and recommend
 
 ### Employee Performance
 - Identify the department with the highest average profit margin.
+  
 - Find the top-performing employee in the IT department and their role.
 
 ### Product Sales and Customer Satisfaction
 - Determine the highest revenue-generating product in the HR department.
+  
 - Calculate the average customer feedback score in the Accessories category and identify the highest-rated product.
 
 ### Supply Chain and Inventory
 - Identify the supplier with the highest total inventory across departments.
+  
 - Find the product with the lowest inventory level in the Gadgets category.
 
 ### Employee Training and Sales
 - Count the number of Sales department employees who completed training.
+  
 - Calculate what percentage of Sales employees have completed training.
 
 ### Product Sales Contribution
 - Calculate the total units sold for Marketing department products.
+  
 - Determine the product that contributed the most to that total.
 
 ## Advanced SQL Features
