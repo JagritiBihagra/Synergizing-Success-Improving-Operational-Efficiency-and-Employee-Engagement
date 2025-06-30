@@ -3,8 +3,9 @@
 This project is part of a SQL capstone focused on addressing key operational inefficiencies and employee engagement strategies within a multi-departmental business. It utilizes SQL queries and database objects to extract insights related to employee performance, product sales, inventory, and more.
 
 ## Problem Statement
-Enhancing Operational Efficiency and Growth Strategies in a Multi-Departmental Business
-Context:
+
+Enhancing Operational Efficiency and Growth Strategies in a Multi-Departmental Business Context.
+
 ● Business operations involve a complex interaction between departments,
 products, suppliers, and employees, where each element contributes to
 overall performance. Challenges such as managing inventory levels,
@@ -16,7 +17,9 @@ sustainable growth.
 
 
 Problem:
+
 The company is experiencing several operational inefficiencies:
+
 ● Employee Performance & Retention Challenges: Inconsistent employee
 Performance and high turnover rates negatively impact productivity.
 The company needs to evaluate whether training programs, salary, and tenure
