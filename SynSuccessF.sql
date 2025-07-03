@@ -1,0 +1,165 @@
+select * from Business_Operations_Dataset$
+
+--? Which department had the highest average profit margin among its products?
+
+SELECT TOP 1 department, AVG(profit_margin) AS avg_profit_margin
+FROM Business_Operations_Dataset$
+GROUP BY department
+ORDER BY avg_profit_margin DESC;
+
+--? Which employee in the IT department had the highest performance score, and what was their role?SELECT TOP 1 employee_name, employee_role, department, employee_performance_score
+FROM Business_Operations_Dataset$
+WHERE department = 'IT'
+ORDER BY employee_performance_score DESC;
+--If There Are Ties?WITH RankedEmployees AS (
+    SELECT employee_name, employee_role, department, employee_performance_score,
+           RANK() OVER (ORDER BY employee_performance_score DESC) AS rank
+    FROM Business_Operations_Dataset$
+    WHERE department = 'IT'
+)
+SELECT employee_name, employee_role, department, employee_performance_score
+FROM RankedEmployees
+WHERE rank = 1;
+--Product Sales & Customer Satisfaction:
+--? Identify the product with the highest revenue generated in the HR department.
+select  product_name, max(revenue) max_rev
+from Business_Operations_Dataset$
+where department='HR'
+group by  product_name
+order by max_rev desc
+
+--Using CTE
+with cte_maxRev as
+( select   product_name, revenue, product_id,
+RANK() OVER (ORDER BY revenue DESC) AS rnk
+from Business_Operations_Dataset$
+where department='HR'
+group by  product_name, revenue, product_id
+)
+select * from cte_maxRev where rnk=1
+
+--? What is the average customer feedback score for products in the
+--Accessories category, and which product received the highest score?
+select top 1 product_name ,avg(customer_feedback_score) avg_cust_fbck, category
+from Business_Operations_Dataset$
+where  category='Accessories'
+group by product_name, category
+order by avg_cust_fbck desc
+
+--? Supply Chain & Inventory Management:
+--? Which supplier had the highest total inventory level across all departments?
+SELECT TOP 1 supplier_id, supplier_name, SUM(inventory_level) AS total_inventory
+FROM Business_Operations_Dataset$
+GROUP BY supplier_id, supplier_name
+ORDER BY total_inventory DESC;
+
+--? Which product in the Gadgets category had the lowest inventory level?SELECT product_id, product_name, category, inventory_level
+FROM Business_Operations_Dataset$
+WHERE category = 'Gadgets'
+  AND inventory_level = (
+      SELECT MIN(inventory_level)
+      FROM Business_Operations_Dataset$
+      WHERE category = 'Gadgets'
+  );--? Employee Training & Sales:
+--? How many employees in the Sales department have completed training programs, and what percentage does this represent of
+--the total employees in that department?
+select count( case when training_program_completed=1 then 1 end ) as Trained_employee,
+count(*) as Total_employee,
+CAST(COUNT(CASE WHEN training_program_completed = 1 THEN 1 END) * 100.0 / COUNT(*) AS DECIMAL(5,2)) AS training_completion_percentage
+FROM Business_Operations_Dataset$
+WHERE department = 'Sales';
+
+--? PRODUCT SALES CONTRIBUTION
+
+--? What is the total number of units sold for all products in the Marketing department, and which product contributed 
+--the most to this total?
+-- Step 1: Get total units sold per product in Marketing
+WITH ProductSales AS (
+    SELECT product_name, SUM(units_sold) AS total_unit_sold
+    FROM Business_Operations_Dataset$
+    WHERE department = 'Marketing'
+    GROUP BY product_name
+)
+
+SELECT 
+    (SELECT SUM(total_unit_sold) FROM ProductSales) AS total_units_sold_in_marketing,
+    product_name AS top_product,
+    total_unit_sold AS top_product_units_sold
+FROM ProductSales
+WHERE total_unit_sold = (
+    SELECT MAX(total_unit_sold) FROM ProductSales
+);
+
+--Advanced SQL Questions
+--? Write a query to rank employees in each department by their revenue generated using a window function.
+
+SELECT 
+    employee_id, 
+    employee_name, 
+    department,
+    RANK() OVER (PARTITION BY department ORDER BY revenue DESC) AS revenue_rank
+FROM Business_Operations_Dataset$;
+
+--? Create a CTE to find the average salary of employees in each department and then select departments where the average 
+--salary is above $70,000.
+WITH cte_avg_sal AS (
+    SELECT department, AVG(salary) AS avg_sal
+    FROM Business_Operations_Dataset$
+    GROUP BY department
+)
+SELECT * 
+FROM cte_avg_sal 
+WHERE avg_sal > 70000;
+
+
+--? DATABASE OBJECTS
+--? Create a view that shows only the product name, revenue, and profit margin for products in the Accessories category.
+-- View: Accessories product financials
+CREATE VIEW vw_Accessories_Products AS
+SELECT product_name, revenue, profit_margin
+FROM Business_Operations_Dataset$
+WHERE category = 'Accessories';
+
+--? Write a query to create a non-clustered index on the employee_name column to improve query performance.
+
+CREATE NONCLUSTERED INDEX idx_employee_name
+ON Business_Operations_Dataset$(employee_name);
+
+--? Create a stored procedure that accepts a department name as a parameter and returns the total revenue generated by that department.
+
+CREATE PROCEDURE sp_GetDepartmentRevenue
+    @DepartmentName NVARCHAR(100)
+AS
+BEGIN
+    SELECT department, SUM(revenue) AS total_revenue
+    FROM Business_Operations_Dataset$
+    WHERE department = @DepartmentName
+    GROUP BY department;
+END;
+
+EXEC sp_GetDepartmentRevenue @DepartmentName = 'Sales';
+
+
+--? Create a scalar UDF that calculates the profit from a given product's
+
+CREATE FUNCTION CalculateProfit (
+    @revenue DECIMAL(18,2),
+    @profit_margin DECIMAL(5,2)
+)
+RETURNS DECIMAL(18,2)
+AS
+BEGIN
+    RETURN (@revenue * @profit_margin / 100.0);
+END;
+
+-- Example use of scalar function
+SELECT 
+    product_name,
+    revenue,
+    profit_margin,
+    dbo.CalculateProfit(revenue, profit_margin) AS profit
+FROM Business_Operations_Dataset$;
+
+-- ? Provide a query to create a clustered index on the company_id column.
+CREATE CLUSTERED INDEX idx_company_id
+ON Business_Operations_Dataset$(company_id);
